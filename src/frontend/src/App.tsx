@@ -7,17 +7,33 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
+import { useState } from "react";
+import LoadingScreen from "./components/LoadingScreen";
 import HomePage from "./pages/HomePage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 
-const rootRoute = createRootRoute({
-  component: () => (
+function RootLayout() {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
     <>
-      <Outlet />
-      <Toaster position="bottom-right" />
+      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
+      <div
+        style={{
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 0.5s ease 0.1s",
+        }}
+      >
+        <Outlet />
+        <Toaster position="bottom-right" />
+      </div>
     </>
-  ),
+  );
+}
+
+const rootRoute = createRootRoute({
+  component: RootLayout,
   notFoundComponent: () => (
     <div className="min-h-screen flex flex-col items-center justify-center bg-darker-bg text-near-white">
       <h1 className="font-playfair text-6xl mb-4 text-gradient-pink">404</h1>
