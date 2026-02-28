@@ -57,6 +57,28 @@ export default function AwardsSection() {
               "radial-gradient(ellipse 50% 60% at 80% 50%, oklch(0.65 0.18 60 / 0.06), transparent)",
           }}
         />
+        {/* Animated elements */}
+        <div
+          className="animate-orb-3 absolute top-0 left-1/3 w-96 h-96 rounded-full blur-3xl"
+          style={{ background: "oklch(0.65 0.18 60 / 0.07)" }}
+        />
+        <div
+          className="animate-orb-1 absolute bottom-0 right-1/4 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.06)" }}
+        />
+        {/* Floating diamonds */}
+        <div
+          className="animate-diamond-1 absolute top-1/4 left-1/5 w-16 h-16 border border-yellow-300/10"
+          style={{ transform: "rotate(45deg)" }}
+        />
+        <div
+          className="animate-diamond-2 absolute bottom-1/3 right-1/3 w-10 h-10 border border-primary/10"
+          style={{ transform: "rotate(45deg)" }}
+        />
+        <div
+          className="animate-diamond-3 absolute top-2/3 left-2/3 w-8 h-8 border border-primary/8"
+          style={{ transform: "rotate(45deg)" }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -172,7 +194,10 @@ export default function AwardsSection() {
                 >
                   {award.subtitle}
                 </p>
-                <p className="font-syne text-sm text-near-white/55 leading-relaxed">
+                <p
+                  className="font-syne text-sm leading-relaxed"
+                  style={{ color: "oklch(0.92 0.02 60)" }}
+                >
                   {award.desc}
                 </p>
 

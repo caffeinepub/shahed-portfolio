@@ -80,8 +80,11 @@ export default function CommunitySection() {
       className="relative py-32 overflow-hidden mesh-gradient-community"
       aria-labelledby="community-heading"
     >
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* Decorative background elements + animated orbs */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
         <div
           className="absolute top-1/4 right-1/4 w-px h-48 opacity-20"
           style={{
@@ -96,6 +99,16 @@ export default function CommunitySection() {
               "linear-gradient(to bottom, transparent, oklch(0.72 0.22 320), transparent)",
           }}
         />
+        {/* Animated orbs */}
+        <div
+          className="animate-orb-1 absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.12)" }}
+        />
+        <div
+          className="animate-orb-2 absolute bottom-0 right-1/4 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: "oklch(0.72 0.22 320 / 0.10)" }}
+        />
+        <div className="animate-glow-pulse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-primary/10" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -157,7 +170,10 @@ export default function CommunitySection() {
             />
           </div>
 
-          <p className="font-syne text-xl text-near-white/65 max-w-2xl mx-auto mt-4 leading-relaxed">
+          <p
+            className="font-syne text-xl max-w-2xl mx-auto mt-4 leading-relaxed"
+            style={{ color: "oklch(0.97 0.01 60)" }}
+          >
             Of the local population is connected, empowered, and informed
             through Shahed's technological work and community initiatives.
           </p>
@@ -190,10 +206,16 @@ export default function CommunitySection() {
                 style={{ color: "oklch(0.72 0.22 320)" }}
                 aria-hidden="true"
               />
-              <h3 className="font-playfair text-2xl text-near-white mb-3">
+              <h3
+                className="font-playfair text-2xl mb-3"
+                style={{ color: "oklch(1 0 0)" }}
+              >
                 {card.title}
               </h3>
-              <p className="font-syne text-sm text-near-white/55 leading-relaxed">
+              <p
+                className="font-syne text-sm leading-relaxed"
+                style={{ color: "oklch(0.92 0.02 60)" }}
+              >
                 {card.desc}
               </p>
             </div>

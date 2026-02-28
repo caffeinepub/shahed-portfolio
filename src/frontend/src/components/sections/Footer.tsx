@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Linkedin, Twitter, Youtube } from "lucide-react";
 
 function scrollTo(id: string) {
   const el = document.getElementById(id);
@@ -10,17 +10,17 @@ const socialLinks = [
   {
     icon: Youtube,
     label: "YouTube",
-    href: "https://youtube.com/@shahed",
+    href: "https://www.youtube.com/@genzthepixel",
   },
   {
     icon: Linkedin,
     label: "LinkedIn",
-    href: "https://linkedin.com/in/shahed",
+    href: "https://linkedin.com/in/genzthepixel",
   },
   {
     icon: Twitter,
     label: "X (Twitter)",
-    href: "https://x.com/shahed",
+    href: "https://x.com/genzthepixel",
   },
 ];
 
@@ -204,33 +204,10 @@ export default function Footer() {
           </p>
 
           <p
-            className="font-syne text-xs flex items-center gap-1.5"
+            className="font-syne text-xs"
             style={{ color: "oklch(0.35 0.02 280)" }}
           >
-            Built with{" "}
-            <Heart
-              className="w-3 h-3 fill-current"
-              style={{ color: "oklch(0.58 0.26 340)" }}
-              aria-label="love"
-            />{" "}
-            using{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:underline"
-              style={{ color: "oklch(0.45 0.02 280)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color =
-                  "oklch(0.72 0.22 320)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color =
-                  "oklch(0.45 0.02 280)";
-              }}
-            >
-              caffeine.ai
-            </a>
+            Shahed · Genzthepixel
           </p>
         </div>
       </div>

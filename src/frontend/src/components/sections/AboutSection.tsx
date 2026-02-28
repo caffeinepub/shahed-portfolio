@@ -13,8 +13,11 @@ export default function AboutSection() {
       style={{ background: "oklch(0.13 0.01 280)" }}
       aria-labelledby="about-heading"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* Background decoration + animated orbs */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
         <div
           className="absolute top-0 right-0 w-1/2 h-full"
           style={{
@@ -23,8 +26,16 @@ export default function AboutSection() {
           }}
         />
         <div
-          className="absolute bottom-0 left-0 w-64 h-64 rounded-full blur-3xl"
-          style={{ background: "oklch(0.42 0.16 345 / 0.08)" }}
+          className="animate-orb-2 absolute bottom-0 left-0 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: "oklch(0.42 0.16 345 / 0.09)" }}
+        />
+        <div
+          className="animate-orb-1 absolute top-1/4 right-1/4 w-56 h-56 rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.06)" }}
+        />
+        <div
+          className="animate-glow-pulse absolute bottom-1/3 right-1/3 w-40 h-40 rounded-full blur-2xl"
+          style={{ background: "oklch(0.72 0.22 320 / 0.07)" }}
         />
       </div>
 
@@ -58,7 +69,10 @@ export default function AboutSection() {
               <em className="text-gradient-pink not-italic">Imagination</em>
             </h2>
 
-            <div className="space-y-5 font-syne text-near-white/65 text-base leading-relaxed">
+            <div
+              className="space-y-5 font-syne text-base leading-relaxed"
+              style={{ color: "oklch(0.96 0.02 60)" }}
+            >
               <p>
                 It started in Class 9 — a curious student picking up C, drawn
                 not by assignments but by a hunger to solve problems that felt
@@ -67,7 +81,7 @@ export default function AboutSection() {
               </p>
               <p>
                 The obsession?{" "}
-                <strong className="text-near-white/90">
+                <strong style={{ color: "oklch(1 0 0)" }}>
                   Physics simulation
                 </strong>
                 . Not the approximated, close-enough physics that most games
@@ -83,7 +97,7 @@ export default function AboutSection() {
               </p>
               <p>
                 The belief:{" "}
-                <strong className="text-near-white/90">
+                <strong style={{ color: "oklch(1 0 0)" }}>
                   humans are capable of going beyond imagination
                 </strong>
                 , when given the right tools, the right mindset, and the courage
@@ -194,7 +208,7 @@ export default function AboutSection() {
                     </p>
                     <p
                       className="font-syne text-xs"
-                      style={{ color: "oklch(0.55 0.02 280)" }}
+                      style={{ color: "oklch(0.75 0.02 280)" }}
                     >
                       {stat.desc}
                     </p>
@@ -217,7 +231,10 @@ export default function AboutSection() {
                 >
                   "
                 </div>
-                <p className="font-playfair text-xl italic text-near-white/80 relative z-10 leading-relaxed">
+                <p
+                  className="font-playfair text-xl italic relative z-10 leading-relaxed"
+                  style={{ color: "oklch(1 0 0)" }}
+                >
                   The universe runs on physics. I just want to simulate it
                   perfectly.
                 </p>

@@ -5,35 +5,35 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 const testimonials = [
   {
     name: "Ratul",
-    initial: "R",
+    avatar: "/assets/generated/avatar-ratul.dim_120x120.jpg",
     quote:
       "Genzthepixel completely changed how I approach math problems. It's like having a genius friend available 24/7.",
     role: "Student",
   },
   {
     name: "Tarek",
-    initial: "T",
+    avatar: "/assets/generated/avatar-tarek.dim_120x120.jpg",
     quote:
       "I used to struggle with complex equations. Now I solve them with confidence thanks to Shahed's tool.",
     role: "Student",
   },
   {
     name: "Jerin",
-    initial: "J",
+    avatar: "/assets/generated/avatar-jerin.dim_120x120.jpg",
     quote:
       "The AI math tool is incredible. It explains concepts in a way that finally makes sense to me.",
     role: "Student",
   },
   {
     name: "Saifa",
-    initial: "S",
+    avatar: "/assets/generated/avatar-saifa.dim_120x120.jpg",
     quote:
       "As a student, Genzthepixel has been a game-changer. Shahed built something truly special for our community.",
     role: "Student",
   },
   {
     name: "Hasan",
-    initial: "H",
+    avatar: "/assets/generated/avatar-hasan.dim_120x120.jpg",
     quote:
       "I've never seen a local developer create something so impactful. Genzthepixel is revolutionary.",
     role: "Community Member",
@@ -90,8 +90,11 @@ export default function TestimonialsSection() {
       style={{ background: "oklch(0.11 0.01 280)" }}
       aria-labelledby="testimonials-heading"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* Background decoration + animated orbs */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
         <div
           className="absolute top-0 left-0 w-full h-1"
           style={{
@@ -104,13 +107,14 @@ export default function TestimonialsSection() {
           style={{ background: "oklch(0.58 0.26 340 / 0.2)" }}
         />
         <div
-          className="absolute right-0 top-1/4 w-96 h-96 rounded-full blur-3xl opacity-5"
-          style={{ background: "oklch(0.58 0.26 340)" }}
+          className="animate-orb-1 absolute right-0 top-1/4 w-96 h-96 rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.07)" }}
         />
         <div
-          className="absolute left-0 bottom-1/4 w-64 h-64 rounded-full blur-3xl opacity-5"
-          style={{ background: "oklch(0.72 0.22 320)" }}
+          className="animate-orb-2 absolute left-0 bottom-1/4 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: "oklch(0.72 0.22 320 / 0.07)" }}
         />
+        <div className="animate-glow-pulse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-primary/8" />
       </div>
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
@@ -173,16 +177,14 @@ export default function TestimonialsSection() {
             <div className="relative z-10">
               {/* Avatar and name */}
               <div className="flex items-center gap-4 mb-8">
-                <div
-                  className="w-14 h-14 flex items-center justify-center font-playfair text-xl font-bold text-white flex-shrink-0"
+                <img
+                  src={current.avatar}
+                  alt={current.name}
+                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
                   style={{
-                    background:
-                      "linear-gradient(135deg, oklch(0.58 0.26 340), oklch(0.42 0.16 345))",
+                    border: "2px solid oklch(0.58 0.26 340 / 0.5)",
                   }}
-                  aria-hidden="true"
-                >
-                  {current.initial}
-                </div>
+                />
                 <div>
                   <p className="font-playfair text-xl text-near-white">
                     {current.name}
@@ -198,7 +200,7 @@ export default function TestimonialsSection() {
 
               {/* Quote */}
               <blockquote>
-                <p className="font-playfair text-2xl md:text-3xl text-near-white/85 leading-relaxed italic">
+                <p className="font-playfair text-2xl md:text-3xl text-near-white leading-relaxed italic">
                   "{current.quote}"
                 </p>
               </blockquote>
@@ -301,17 +303,23 @@ export default function TestimonialsSection() {
               }}
               aria-label={`View testimonial from ${t.name}`}
             >
-              <div
-                className="w-8 h-8 mx-auto mb-2 flex items-center justify-center font-playfair text-sm font-bold text-white"
+              <img
+                src={t.avatar}
+                alt={t.name}
+                className="w-8 h-8 rounded-full object-cover mx-auto mb-2"
                 style={{
-                  background:
-                    "linear-gradient(135deg, oklch(0.58 0.26 340), oklch(0.42 0.16 345))",
+                  border:
+                    i === active
+                      ? "1px solid oklch(0.58 0.26 340)"
+                      : "1px solid transparent",
                 }}
-                aria-hidden="true"
+              />
+              <p
+                className="font-syne text-xs"
+                style={{ color: "oklch(0.92 0.02 60)" }}
               >
-                {t.initial}
-              </div>
-              <p className="font-syne text-xs text-near-white/70">{t.name}</p>
+                {t.name}
+              </p>
             </button>
           ))}
         </div>

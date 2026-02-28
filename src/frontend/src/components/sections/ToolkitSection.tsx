@@ -59,9 +59,28 @@ export default function ToolkitSection() {
     <section
       id="toolkit"
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="py-32 bg-near-white"
+      className="relative py-32 bg-near-white overflow-hidden"
       aria-labelledby="toolkit-heading"
     >
+      {/* Section background animation */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="animate-orb-2 absolute top-1/3 right-0 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: "oklch(0.65 0.18 60 / 0.05)" }}
+        />
+        <div
+          className="animate-orb-3 absolute bottom-1/4 left-0 w-64 h-64 rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.04)" }}
+        />
+        {/* Animated scan line */}
+        <div
+          className="animate-scan-line absolute left-0 w-full h-px opacity-5"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, oklch(0.58 0.26 340), transparent)",
+          }}
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
         <div

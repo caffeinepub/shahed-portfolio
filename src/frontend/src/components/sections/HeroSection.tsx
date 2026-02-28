@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 function scrollTo(id: string) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth" });
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 72;
+  window.scrollTo({ top, behavior: "smooth" });
 }
 
 interface Particle {
@@ -61,15 +63,21 @@ export default function HeroSection() {
             }}
           />
         ))}
-        {/* Decorative orbs */}
+        {/* Animated drifting orbs — section animation */}
         <div
-          className="absolute top-1/4 right-1/3 w-96 h-96 rounded-full blur-3xl pointer-events-none"
-          style={{ background: "oklch(0.58 0.26 340 / 0.08)" }}
+          className="animate-orb-1 absolute top-1/4 right-1/3 w-[500px] h-[500px] rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.10)" }}
         />
         <div
-          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none"
-          style={{ background: "oklch(0.42 0.16 345 / 0.12)" }}
+          className="animate-orb-2 absolute bottom-1/3 left-1/4 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: "oklch(0.42 0.16 345 / 0.14)" }}
         />
+        <div
+          className="animate-orb-3 absolute top-2/3 right-1/5 w-64 h-64 rounded-full blur-3xl"
+          style={{ background: "oklch(0.72 0.22 320 / 0.08)" }}
+        />
+        {/* Slow pulsing glow ring */}
+        <div className="animate-glow-pulse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-primary/20" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
@@ -166,9 +174,15 @@ export default function HeroSection() {
           </div>
 
           {/* Profile image with clip */}
-          <div className="relative z-10 pink-glow">
+          <div className="relative z-10 group/photo">
+            {/* Pink glow on hover */}
             <div
-              className="profile-clip overflow-hidden w-72 h-96 lg:w-80 lg:h-[420px]"
+              className="absolute inset-0 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-500 pointer-events-none -z-10 blur-2xl"
+              style={{ background: "oklch(0.58 0.26 340 / 0.5)" }}
+              aria-hidden="true"
+            />
+            <div
+              className="profile-clip overflow-hidden w-72 h-96 lg:w-80 lg:h-[420px] transition-all duration-500 group-hover/photo:shadow-[0_0_40px_oklch(0.58_0.26_340/0.6)]"
               style={{ background: "oklch(0.13 0.01 280)" }}
             >
               <img

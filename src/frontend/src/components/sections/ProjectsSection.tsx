@@ -72,9 +72,28 @@ export default function ProjectsSection() {
     <section
       id="work"
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="py-32 bg-near-white"
+      className="relative py-32 bg-near-white overflow-hidden"
       aria-labelledby="work-heading"
     >
+      {/* Subtle animated background for white section */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="animate-orb-3 absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.04)" }}
+        />
+        <div
+          className="animate-orb-1 absolute bottom-0 -left-24 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: "oklch(0.42 0.16 345 / 0.05)" }}
+        />
+        {/* Diagonal pink line accent */}
+        <div
+          className="absolute top-0 right-1/4 w-px h-full opacity-5"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent, oklch(0.58 0.26 340), transparent)",
+          }}
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
         <div

@@ -18,21 +18,21 @@ const socialLinks = [
   {
     icon: Youtube,
     label: "YouTube",
-    href: "https://youtube.com/@shahed",
+    href: "https://www.youtube.com/@genzthepixel",
     color: "oklch(0.65 0.2 25)",
     hoverBg: "oklch(0.65 0.2 25 / 0.1)",
   },
   {
     icon: Linkedin,
     label: "LinkedIn",
-    href: "https://linkedin.com/in/shahed",
+    href: "https://linkedin.com/in/genzthepixel",
     color: "oklch(0.55 0.15 220)",
     hoverBg: "oklch(0.55 0.15 220 / 0.1)",
   },
   {
     icon: Twitter,
     label: "X (Twitter)",
-    href: "https://x.com/shahed",
+    href: "https://x.com/genzthepixel",
     color: "oklch(0.85 0 0)",
     hoverBg: "oklch(0.85 0 0 / 0.08)",
   },
@@ -88,6 +88,24 @@ export default function ContactSection() {
           backgroundSize: "200px",
         }}
       />
+      {/* Animated orbs */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          className="animate-orb-1 absolute top-0 left-1/4 w-[400px] h-[400px] rounded-full blur-3xl"
+          style={{ background: "oklch(0.58 0.26 340 / 0.12)" }}
+        />
+        <div
+          className="animate-orb-3 absolute bottom-0 right-1/4 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: "oklch(0.42 0.16 345 / 0.10)" }}
+        />
+        <div
+          className="animate-glow-pulse absolute top-1/2 right-0 w-64 h-64 rounded-full blur-3xl"
+          style={{ background: "oklch(0.72 0.22 320 / 0.08)" }}
+        />
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -129,12 +147,6 @@ export default function ContactSection() {
 
             {/* Social links */}
             <div>
-              <p
-                className="font-syne text-xs tracking-[0.3em] uppercase mb-5"
-                style={{ color: "oklch(0.55 0.02 280)" }}
-              >
-                Find Me Online
-              </p>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <a
