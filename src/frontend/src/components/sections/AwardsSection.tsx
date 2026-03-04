@@ -1,4 +1,5 @@
 import { Medal, Star, Trophy } from "lucide-react";
+import { motion } from "motion/react";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const awards = [
@@ -38,6 +39,19 @@ export default function AwardsSection() {
       className="relative py-32 overflow-hidden"
       aria-labelledby="awards-heading"
     >
+      {/* Section number */}
+      <div
+        className="absolute top-8 right-14 z-10 pointer-events-none"
+        aria-hidden="true"
+      >
+        <span
+          className="font-syne text-xs tracking-[0.4em] uppercase"
+          style={{ color: "oklch(0.58 0.26 340 / 0.5)" }}
+        >
+          07
+        </span>
+      </div>
+
       {/* Background image with overlay */}
       <div className="absolute inset-0" aria-hidden="true">
         <img
@@ -88,40 +102,56 @@ export default function AwardsSection() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <p
-            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center justify-center gap-3"
+          <motion.p
+            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center justify-center gap-3 cursor-default"
             style={{ color: "oklch(0.65 0.18 60)" }}
+            whileHover={{
+              letterSpacing: "0.6em",
+              transition: { duration: 0.3 },
+            }}
           >
-            <span
-              className="inline-block w-8 h-px"
-              style={{ background: "oklch(0.65 0.18 60)" }}
+            <motion.span
+              className="inline-block h-px"
+              style={{ background: "oklch(0.65 0.18 60)", width: "32px" }}
+              whileHover={{ width: "56px", transition: { duration: 0.3 } }}
             />
             Recognition
-            <span
-              className="inline-block w-8 h-px"
-              style={{ background: "oklch(0.65 0.18 60)" }}
+            <motion.span
+              className="inline-block h-px"
+              style={{ background: "oklch(0.65 0.18 60)", width: "32px" }}
+              whileHover={{ width: "56px", transition: { duration: 0.3 } }}
             />
-          </p>
-          <h2
+          </motion.p>
+          <motion.h2
             id="awards-heading"
-            className="font-playfair text-5xl md:text-6xl text-near-white mb-4"
+            className="font-playfair text-5xl md:text-6xl text-near-white mb-4 cursor-default"
+            whileHover={{
+              textShadow: "0 0 30px oklch(0.65 0.18 60 / 0.6)",
+              scale: 1.01,
+              transition: { duration: 0.2 },
+            }}
           >
             Recognition &amp; Awards
-          </h2>
-          <p
-            className="font-playfair text-2xl italic"
+          </motion.h2>
+          <motion.p
+            className="font-playfair text-2xl italic cursor-default"
             style={{ color: "oklch(0.65 0.18 60)" }}
+            whileHover={{
+              textShadow: "0 0 20px oklch(0.65 0.18 60 / 0.5)",
+              letterSpacing: "0.01em",
+              transition: { duration: 0.2 },
+            }}
           >
             School Robotics Coding — Champion
-          </p>
+          </motion.p>
         </div>
 
         {/* Awards grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {awards.map((award, i) => (
-            <div
+            <motion.div
               key={award.title}
-              className={`relative overflow-hidden group transition-all duration-700 hover:translate-y-[-4px] ${
+              className={`relative overflow-hidden group transition-all duration-700 ${
                 isVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
@@ -129,6 +159,11 @@ export default function AwardsSection() {
               style={{
                 transitionDelay: `${i * 150}ms`,
               }}
+              whileHover={{
+                y: -4,
+                transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
+              }}
+              data-ocid={`awards.item.${i + 1}`}
             >
               {/* Award frame */}
               <div
@@ -140,22 +175,22 @@ export default function AwardsSection() {
               >
                 {/* Corner ornaments */}
                 <div
-                  className="absolute top-3 left-3 w-4 h-4 border-t border-l"
+                  className="absolute top-3 left-3 w-4 h-4 border-t border-l transition-all duration-300 group-hover:w-6 group-hover:h-6"
                   style={{ borderColor: `${award.color}60` }}
                   aria-hidden="true"
                 />
                 <div
-                  className="absolute top-3 right-3 w-4 h-4 border-t border-r"
+                  className="absolute top-3 right-3 w-4 h-4 border-t border-r transition-all duration-300 group-hover:w-6 group-hover:h-6"
                   style={{ borderColor: `${award.color}60` }}
                   aria-hidden="true"
                 />
                 <div
-                  className="absolute bottom-3 left-3 w-4 h-4 border-b border-l"
+                  className="absolute bottom-3 left-3 w-4 h-4 border-b border-l transition-all duration-300 group-hover:w-6 group-hover:h-6"
                   style={{ borderColor: `${award.color}60` }}
                   aria-hidden="true"
                 />
                 <div
-                  className="absolute bottom-3 right-3 w-4 h-4 border-b border-r"
+                  className="absolute bottom-3 right-3 w-4 h-4 border-b border-r transition-all duration-300 group-hover:w-6 group-hover:h-6"
                   style={{ borderColor: `${award.color}60` }}
                   aria-hidden="true"
                 />
@@ -169,13 +204,22 @@ export default function AwardsSection() {
                   aria-hidden="true"
                 />
 
-                {/* Icon */}
+                {/* Icon with spin/scale on hover */}
                 <div className="mb-6">
-                  <award.icon
-                    className="w-8 h-8"
-                    style={{ color: award.color }}
-                    aria-hidden="true"
-                  />
+                  <motion.div
+                    className="group-hover:rotate-12"
+                    whileHover={{
+                      rotate: 12,
+                      scale: 1.25,
+                      transition: { duration: 0.3 },
+                    }}
+                  >
+                    <award.icon
+                      className="w-8 h-8 award-icon-animate"
+                      style={{ color: award.color }}
+                      aria-hidden="true"
+                    />
+                  </motion.div>
                 </div>
 
                 {/* Content */}
@@ -185,9 +229,15 @@ export default function AwardsSection() {
                 >
                   {award.year}
                 </p>
-                <h3 className="font-playfair text-3xl text-near-white mb-1">
+                <motion.h3
+                  className="font-playfair text-3xl text-near-white mb-1 cursor-default"
+                  whileHover={{
+                    textShadow: `0 0 20px ${award.color}80`,
+                    transition: { duration: 0.2 },
+                  }}
+                >
                   {award.title}
-                </h3>
+                </motion.h3>
                 <p
                   className="font-syne text-sm mb-4"
                   style={{ color: award.color }}
@@ -210,7 +260,7 @@ export default function AwardsSection() {
                   aria-hidden="true"
                 />
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

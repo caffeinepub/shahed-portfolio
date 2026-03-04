@@ -7,24 +7,52 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import { useState } from "react";
-import LoadingScreen from "./components/LoadingScreen";
+import { useEffect, useState } from "react";
+import PinkCursor from "./components/PinkCursor";
+import RightProgressBar from "./components/RightProgressBar";
 import HomePage from "./pages/HomePage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 
-function RootLayout() {
-  const [loaded, setLoaded] = useState(false);
+function ScrollBrightnessDim() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? Math.min(1, scrollTop / docHeight) : 0);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // At top: opacity 0 (full brightness). At bottom: opacity 0.28 (gentle dim, still readable).
+  const dimOpacity = progress * 0.28;
 
   return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 40,
+        pointerEvents: "none",
+        background: "oklch(0.06 0.015 280)",
+        opacity: dimOpacity,
+        transition: "opacity 0.12s linear",
+      }}
+    />
+  );
+}
+
+function RootLayout() {
+  return (
     <>
-      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
-      <div
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.5s ease 0.1s",
-        }}
-      >
+      <PinkCursor />
+      <RightProgressBar />
+      <ScrollBrightnessDim />
+      <div>
         <Outlet />
         <Toaster position="bottom-right" />
       </div>

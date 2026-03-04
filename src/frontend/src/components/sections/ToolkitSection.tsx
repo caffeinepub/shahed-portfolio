@@ -1,6 +1,8 @@
+import { motion } from "motion/react";
+import { useState } from "react";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
-const asmSnippet = `<span class="asm-cm">; IDA Pro disassembly snippet</span>
+const asmSnippetFull = `<span class="asm-cm">; IDA Pro disassembly snippet</span>
 <span class="asm-kw">push</span>    <span class="asm-reg">ebp</span>
 <span class="asm-kw">mov</span>     <span class="asm-reg">ebp</span>, <span class="asm-reg">esp</span>
 <span class="asm-kw">sub</span>     <span class="asm-reg">esp</span>, <span class="asm-nu">18h</span>
@@ -52,6 +54,182 @@ const skills = [
   },
 ];
 
+function AsmCodeBlock() {
+  return (
+    <pre
+      className="code-block text-sm overflow-x-auto"
+      aria-label="IDA Pro assembly disassembly"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: syntax-highlighted code
+      dangerouslySetInnerHTML={{ __html: asmSnippetFull }}
+    />
+  );
+}
+
+function SkillCard({
+  skill,
+  isVisible,
+  index,
+}: {
+  skill: (typeof skills)[0];
+  isVisible: boolean;
+  index: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      key={skill.name}
+      className={`p-6 relative overflow-hidden cursor-default ${
+        isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+      } ${skill.highlight ? "border-2" : "border"}`}
+      style={{
+        transitionDelay: `${index * 100}ms`,
+        background: skill.highlight ? "oklch(0.13 0.01 280)" : "oklch(1 0 0)",
+        borderColor: skill.highlight
+          ? "oklch(0.65 0.18 60 / 0.5)"
+          : "oklch(0.88 0.02 340)",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        boxShadow: hovered ? `0 8px 24px ${skill.badgeColor}30` : "none",
+        transition:
+          "transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s ease",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {skill.highlight && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "oklch(0.65 0.18 60 / 0.03)",
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Pink scan line on hover */}
+      {hovered && (
+        <motion.div
+          className="absolute left-0 right-0 top-0 pointer-events-none z-10"
+          style={{
+            height: "2px",
+            background: `linear-gradient(90deg, transparent, ${skill.badgeColor}, transparent)`,
+            opacity: 0.7,
+          }}
+          initial={{ scaleY: 0, y: 0 }}
+          animate={{ scaleY: 1, y: "100%" }}
+          transition={{ duration: 0.4, ease: "linear" }}
+          aria-hidden="true"
+        />
+      )}
+
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <span
+            className="font-syne text-xs tracking-widest uppercase px-2 py-0.5 mr-3"
+            style={{
+              background: `${skill.badgeColor}20`,
+              color: skill.badgeColor,
+              border: `1px solid ${skill.badgeColor}40`,
+            }}
+          >
+            {skill.badge}
+          </span>
+          <span
+            className="font-syne text-xs tracking-[0.2em] uppercase"
+            style={{
+              color: skill.highlight
+                ? "oklch(0.65 0.18 60)"
+                : "oklch(0.45 0.02 280)",
+            }}
+          >
+            {skill.level}
+          </span>
+        </div>
+      </div>
+
+      <motion.h3
+        className="font-playfair text-2xl mb-2"
+        style={{
+          color: skill.highlight
+            ? "oklch(0.97 0.01 60)"
+            : "oklch(0.13 0.01 280)",
+        }}
+        animate={
+          hovered
+            ? {
+                textShadow: `0 0 20px ${skill.badgeColor}60`,
+              }
+            : { textShadow: "none" }
+        }
+      >
+        {skill.name}
+      </motion.h3>
+
+      <p
+        className="font-syne text-sm mb-3 font-semibold"
+        style={{ color: skill.badgeColor }}
+      >
+        {skill.desc}
+      </p>
+
+      <p
+        className="font-syne text-sm leading-relaxed"
+        style={{
+          color: skill.highlight
+            ? "oklch(0.65 0.02 280)"
+            : "oklch(0.45 0.02 280)",
+        }}
+      >
+        {skill.detail}
+      </p>
+
+      {/* Progress bar */}
+      <div
+        className="mt-4"
+        role="progressbar"
+        tabIndex={-1}
+        aria-valuenow={skill.progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${skill.name} proficiency: ${skill.progress}%`}
+      >
+        <div className="flex justify-between mb-1">
+          <span
+            className="font-syne text-xs"
+            style={{ color: "oklch(0.55 0.02 280)" }}
+          >
+            Proficiency
+          </span>
+          <span
+            className="font-syne text-xs"
+            style={{ color: skill.badgeColor }}
+          >
+            {skill.progress}%
+          </span>
+        </div>
+        <div
+          className="h-1 w-full"
+          style={{ background: "oklch(0.88 0.02 340 / 0.3)" }}
+        >
+          <motion.div
+            className="h-full"
+            style={{
+              background: `linear-gradient(90deg, ${skill.badgeColor}, oklch(0.72 0.22 320))`,
+            }}
+            initial={{ width: 0 }}
+            animate={{ width: isVisible ? `${skill.progress}%` : "0%" }}
+            transition={{
+              duration: 1,
+              delay: index * 0.15 + 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ToolkitSection() {
   const { ref: sectionRef, isVisible } = useIntersectionObserver();
 
@@ -62,6 +240,19 @@ export default function ToolkitSection() {
       className="relative py-32 bg-near-white overflow-hidden"
       aria-labelledby="toolkit-heading"
     >
+      {/* Section number */}
+      <div
+        className="absolute top-8 right-14 z-10 pointer-events-none"
+        aria-hidden="true"
+      >
+        <span
+          className="font-syne text-xs tracking-[0.4em] uppercase"
+          style={{ color: "oklch(0.58 0.26 340 / 0.4)" }}
+        >
+          05
+        </span>
+      </div>
+
       {/* Section background animation */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
@@ -88,150 +279,46 @@ export default function ToolkitSection() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <p
-            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center gap-3"
+          <motion.p
+            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center gap-3 cursor-default"
             style={{ color: "oklch(0.58 0.26 340)" }}
+            whileHover={{
+              letterSpacing: "0.6em",
+              transition: { duration: 0.3 },
+            }}
           >
-            <span
-              className="inline-block w-8 h-px"
-              style={{ background: "oklch(0.58 0.26 340)" }}
+            <motion.span
+              className="inline-block h-px"
+              style={{ background: "oklch(0.58 0.26 340)", width: "32px" }}
+              whileHover={{ width: "56px", transition: { duration: 0.3 } }}
             />
             Technical Toolkit
-          </p>
-          <h2
+          </motion.p>
+          <motion.h2
             id="toolkit-heading"
-            className="font-playfair text-5xl md:text-6xl text-dark-bg leading-tight"
+            className="font-playfair text-5xl md:text-6xl text-dark-bg leading-tight cursor-default"
+            whileHover={{
+              textShadow: "0 0 30px oklch(0.58 0.26 340 / 0.5)",
+              scale: 1.01,
+              transition: { duration: 0.2 },
+            }}
           >
             The Craft
             <br />
             <em className="text-gradient-pink not-italic">Behind the Code</em>
-          </h2>
+          </motion.h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Skill cards */}
           <div className="space-y-4">
             {skills.map((skill, i) => (
-              <div
+              <SkillCard
                 key={skill.name}
-                className={`p-6 relative overflow-hidden group transition-all duration-500 ${
-                  isVisible
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 -translate-x-8"
-                } ${skill.highlight ? "border-2" : "border"}`}
-                style={{
-                  transitionDelay: `${i * 100}ms`,
-                  background: skill.highlight
-                    ? "oklch(0.13 0.01 280)"
-                    : "oklch(1 0 0)",
-                  borderColor: skill.highlight
-                    ? "oklch(0.65 0.18 60 / 0.5)"
-                    : "oklch(0.88 0.02 340)",
-                }}
-              >
-                {skill.highlight && (
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "oklch(0.65 0.18 60 / 0.03)",
-                    }}
-                    aria-hidden="true"
-                  />
-                )}
-
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <span
-                      className="font-syne text-xs tracking-widest uppercase px-2 py-0.5 mr-3"
-                      style={{
-                        background: `${skill.badgeColor}20`,
-                        color: skill.badgeColor,
-                        border: `1px solid ${skill.badgeColor}40`,
-                      }}
-                    >
-                      {skill.badge}
-                    </span>
-                    <span
-                      className="font-syne text-xs tracking-[0.2em] uppercase"
-                      style={{
-                        color: skill.highlight
-                          ? "oklch(0.65 0.18 60)"
-                          : "oklch(0.45 0.02 280)",
-                      }}
-                    >
-                      {skill.level}
-                    </span>
-                  </div>
-                </div>
-
-                <h3
-                  className="font-playfair text-2xl mb-2"
-                  style={{
-                    color: skill.highlight
-                      ? "oklch(0.97 0.01 60)"
-                      : "oklch(0.13 0.01 280)",
-                  }}
-                >
-                  {skill.name}
-                </h3>
-
-                <p
-                  className="font-syne text-sm mb-3 font-semibold"
-                  style={{ color: skill.badgeColor }}
-                >
-                  {skill.desc}
-                </p>
-
-                <p
-                  className="font-syne text-sm leading-relaxed"
-                  style={{
-                    color: skill.highlight
-                      ? "oklch(0.65 0.02 280)"
-                      : "oklch(0.45 0.02 280)",
-                  }}
-                >
-                  {skill.detail}
-                </p>
-
-                {/* Progress bar */}
-                <div
-                  className="mt-4"
-                  role="progressbar"
-                  tabIndex={-1}
-                  aria-valuenow={skill.progress}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-label={`${skill.name} proficiency: ${skill.progress}%`}
-                >
-                  <div className="flex justify-between mb-1">
-                    <span
-                      className="font-syne text-xs"
-                      style={{ color: "oklch(0.55 0.02 280)" }}
-                    >
-                      Proficiency
-                    </span>
-                    <span
-                      className="font-syne text-xs"
-                      style={{ color: skill.badgeColor }}
-                    >
-                      {skill.progress}%
-                    </span>
-                  </div>
-                  <div
-                    className="h-1 w-full"
-                    style={{ background: "oklch(0.88 0.02 340 / 0.3)" }}
-                  >
-                    <div
-                      className="h-full transition-all duration-1000"
-                      style={{
-                        width: isVisible ? `${skill.progress}%` : "0%",
-                        background: `linear-gradient(90deg, ${skill.badgeColor}, oklch(0.72 0.22 320))`,
-                        transitionDelay: `${i * 150 + 300}ms`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
+                skill={skill}
+                isVisible={isVisible}
+                index={i}
+              />
             ))}
           </div>
 
@@ -284,12 +371,8 @@ export default function ToolkitSection() {
                 wind_physics.exe — disassembly view
               </p>
 
-              <pre
-                className="code-block text-sm overflow-x-auto"
-                aria-label="IDA Pro assembly disassembly"
-                // biome-ignore lint/security/noDangerouslySetInnerHtml: syntax-highlighted code
-                dangerouslySetInnerHTML={{ __html: asmSnippet }}
-              />
+              {/* Assembly code block */}
+              <AsmCodeBlock />
 
               <div
                 className="mt-6 p-4"

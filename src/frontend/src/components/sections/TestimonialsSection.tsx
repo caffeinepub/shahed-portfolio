@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
@@ -40,11 +41,24 @@ const testimonials = [
   },
 ];
 
+interface Particle {
+  id: number;
+  dx: number;
+  dy: number;
+}
+
+interface DotBurst {
+  dotIndex: number;
+  particles: Particle[];
+}
+
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef<ReturnType<typeof setInterval>>(null);
   const { ref: sectionRef, isVisible } = useIntersectionObserver();
+  const [dotBurst, setDotBurst] = useState<DotBurst | null>(null);
+  const [blockquoteHovered, setBlockquoteHovered] = useState(false);
 
   const goTo = useCallback(
     (index: number) => {
@@ -80,6 +94,19 @@ export default function TestimonialsSection() {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
   };
 
+  const handleDotClick = (i: number) => {
+    stopAutoPlay();
+    goTo(i);
+    // Spawn particle burst
+    const particles = Array.from({ length: 6 }, (_, pid) => ({
+      id: pid,
+      dx: Math.cos((pid / 6) * Math.PI * 2) * (20 + Math.random() * 12),
+      dy: Math.sin((pid / 6) * Math.PI * 2) * (20 + Math.random() * 12),
+    }));
+    setDotBurst({ dotIndex: i, particles });
+    setTimeout(() => setDotBurst(null), 700);
+  };
+
   const current = testimonials[active];
 
   return (
@@ -90,6 +117,19 @@ export default function TestimonialsSection() {
       style={{ background: "oklch(0.11 0.01 280)" }}
       aria-labelledby="testimonials-heading"
     >
+      {/* Section number */}
+      <div
+        className="absolute top-8 right-14 z-10 pointer-events-none"
+        aria-hidden="true"
+      >
+        <span
+          className="font-syne text-xs tracking-[0.4em] uppercase"
+          style={{ color: "oklch(0.58 0.26 340 / 0.5)" }}
+        >
+          06
+        </span>
+      </div>
+
       {/* Background decoration + animated orbs */}
       <div
         className="absolute inset-0 pointer-events-none overflow-hidden"
@@ -124,28 +164,39 @@ export default function TestimonialsSection() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <p
-            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center justify-center gap-3"
+          <motion.p
+            className="font-syne text-xs tracking-[0.4em] uppercase mb-4 flex items-center justify-center gap-3 cursor-default"
             style={{ color: "oklch(0.72 0.22 320)" }}
+            whileHover={{
+              letterSpacing: "0.6em",
+              transition: { duration: 0.3 },
+            }}
           >
-            <span
-              className="inline-block w-8 h-px"
-              style={{ background: "oklch(0.72 0.22 320)" }}
+            <motion.span
+              className="inline-block h-px"
+              style={{ background: "oklch(0.72 0.22 320)", width: "32px" }}
+              whileHover={{ width: "56px", transition: { duration: 0.3 } }}
             />
             Social Proof
-            <span
-              className="inline-block w-8 h-px"
-              style={{ background: "oklch(0.72 0.22 320)" }}
+            <motion.span
+              className="inline-block h-px"
+              style={{ background: "oklch(0.72 0.22 320)", width: "32px" }}
+              whileHover={{ width: "56px", transition: { duration: 0.3 } }}
             />
-          </p>
-          <h2
+          </motion.p>
+          <motion.h2
             id="testimonials-heading"
-            className="font-playfair text-4xl md:text-5xl text-near-white"
+            className="font-playfair text-4xl md:text-5xl text-near-white cursor-default"
+            whileHover={{
+              textShadow: "0 0 30px oklch(0.58 0.26 340 / 0.8)",
+              scale: 1.01,
+              transition: { duration: 0.2 },
+            }}
           >
             What They Say About
             <br />
             <em className="text-gradient-pink not-italic">Genzthepixel</em>
-          </h2>
+          </motion.h2>
         </div>
 
         {/* Slider */}
@@ -157,38 +208,65 @@ export default function TestimonialsSection() {
           aria-label="Testimonials slider"
           aria-roledescription="carousel"
         >
-          <div
+          <motion.div
             className="relative p-10 md:p-14 transition-opacity duration-300"
             style={{
               background: "oklch(0.15 0.01 280)",
-              border: "1px solid oklch(0.25 0.02 340)",
+              border: blockquoteHovered
+                ? "1px solid oklch(0.58 0.26 340 / 0.4)"
+                : "1px solid oklch(0.25 0.02 340)",
               opacity: isTransitioning ? 0 : 1,
+              transition: "border 0.2s ease, opacity 0.3s ease",
+            }}
+            onMouseEnter={() => setBlockquoteHovered(true)}
+            onMouseLeave={() => setBlockquoteHovered(false)}
+            whileHover={{
+              boxShadow: "0 0 40px oklch(0.58 0.26 340 / 0.15)",
+              transition: { duration: 0.3 },
             }}
           >
             {/* Large quote mark */}
-            <div
+            <motion.div
               className="absolute top-6 left-10 font-playfair text-9xl leading-none select-none pointer-events-none"
               style={{ color: "oklch(0.58 0.26 340 / 0.12)" }}
+              animate={{
+                color: blockquoteHovered
+                  ? "oklch(0.58 0.26 340 / 0.35)"
+                  : "oklch(0.58 0.26 340 / 0.12)",
+                scale: blockquoteHovered ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
               aria-hidden="true"
             >
               "
-            </div>
+            </motion.div>
 
             <div className="relative z-10">
               {/* Avatar and name */}
               <div className="flex items-center gap-4 mb-8">
-                <img
+                <motion.img
                   src={current.avatar}
                   alt={current.name}
                   className="w-14 h-14 rounded-full object-cover flex-shrink-0"
                   style={{
                     border: "2px solid oklch(0.58 0.26 340 / 0.5)",
                   }}
+                  whileHover={{
+                    scale: 1.1,
+                    boxShadow: "0 0 20px oklch(0.58 0.26 340 / 0.5)",
+                    transition: { duration: 0.2 },
+                  }}
                 />
                 <div>
-                  <p className="font-playfair text-xl text-near-white">
+                  <motion.p
+                    className="font-playfair text-xl text-near-white cursor-default"
+                    whileHover={{
+                      textShadow: "0 0 20px oklch(0.78 0.22 320 / 0.5)",
+                      transition: { duration: 0.2 },
+                    }}
+                  >
                     {current.name}
-                  </p>
+                  </motion.p>
                   <p
                     className="font-syne text-xs tracking-wider uppercase"
                     style={{ color: "oklch(0.72 0.22 320)" }}
@@ -200,79 +278,119 @@ export default function TestimonialsSection() {
 
               {/* Quote */}
               <blockquote>
-                <p className="font-playfair text-2xl md:text-3xl text-near-white leading-relaxed italic">
+                <motion.p
+                  className="font-playfair text-2xl md:text-3xl text-near-white leading-relaxed italic cursor-default"
+                  whileHover={{
+                    textShadow: "0 0 20px oklch(0.78 0.22 320 / 0.3)",
+                    scale: 1.005,
+                    transition: { duration: 0.2 },
+                  }}
+                >
                   "{current.quote}"
-                </p>
+                </motion.p>
               </blockquote>
             </div>
-          </div>
+          </motion.div>
 
           {/* Controls */}
           <div className="flex items-center justify-between mt-8">
-            {/* Dots */}
+            {/* Dots with particle burst */}
             <div
               className="flex gap-2"
               role="tablist"
               aria-label="Testimonial navigation dots"
             >
               {testimonials.map((t, i) => (
-                <button
-                  key={t.name}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === active}
-                  aria-label={`Go to testimonial by ${t.name}`}
-                  onClick={() => {
-                    stopAutoPlay();
-                    goTo(i);
-                  }}
-                  className="transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                  style={{
-                    width: i === active ? "32px" : "8px",
-                    height: "8px",
-                    background:
-                      i === active
-                        ? "oklch(0.58 0.26 340)"
-                        : "oklch(0.35 0.02 280)",
-                    borderRadius: "4px",
-                  }}
-                />
+                <div key={t.name} className="relative">
+                  {/* Particle burst */}
+                  {dotBurst?.dotIndex === i &&
+                    dotBurst.particles.map((p) => (
+                      <div
+                        key={p.id}
+                        aria-hidden="true"
+                        className="absolute top-1/2 left-1/2 w-1.5 h-1.5 rounded-full pointer-events-none"
+                        style={{
+                          background: "oklch(0.72 0.22 320)",
+                          boxShadow: "0 0 4px oklch(0.58 0.26 340)",
+                          animation: "wave-burst 700ms ease-out forwards",
+                          transform: `translate(calc(-50% + ${p.dx}px), calc(-50% + ${p.dy}px))`,
+                          zIndex: 10,
+                        }}
+                      />
+                    ))}
+                  <motion.button
+                    type="button"
+                    role="tab"
+                    aria-selected={i === active}
+                    aria-label={`Go to testimonial by ${t.name}`}
+                    onClick={() => handleDotClick(i)}
+                    className="transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                    style={{
+                      width: i === active ? "32px" : "8px",
+                      height: "8px",
+                      background:
+                        i === active
+                          ? "oklch(0.58 0.26 340)"
+                          : "oklch(0.35 0.02 280)",
+                      borderRadius: "4px",
+                    }}
+                    whileHover={{
+                      boxShadow: "0 0 12px oklch(0.58 0.26 340 / 0.6)",
+                      transition: { duration: 0.2 },
+                    }}
+                    data-ocid="testimonials.tab"
+                  />
+                </div>
               ))}
             </div>
 
             {/* Arrows */}
             <div className="flex gap-3">
-              <button
+              <motion.button
                 type="button"
                 onClick={() => {
                   stopAutoPlay();
                   prev();
                 }}
-                className="w-10 h-10 flex items-center justify-center transition-all duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                className="w-10 h-10 flex items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 style={{
                   border: "1px solid oklch(0.35 0.02 280)",
                   color: "oklch(0.65 0.02 280)",
                 }}
+                whileHover={{
+                  scale: 1.1,
+                  borderColor: "oklch(0.58 0.26 340 / 0.6)",
+                  color: "oklch(0.72 0.22 320)",
+                  boxShadow: "0 0 16px oklch(0.58 0.26 340 / 0.3)",
+                  transition: { duration: 0.2 },
+                }}
                 aria-label="Previous testimonial"
+                data-ocid="testimonials.pagination_prev"
               >
                 <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={() => {
                   stopAutoPlay();
                   next();
                 }}
-                className="w-10 h-10 flex items-center justify-center transition-all duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                className="w-10 h-10 flex items-center justify-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 style={{
                   background:
                     "linear-gradient(135deg, oklch(0.58 0.26 340), oklch(0.42 0.16 345))",
                   color: "white",
                 }}
+                whileHover={{
+                  scale: 1.1,
+                  boxShadow: "0 0 20px oklch(0.58 0.26 340 / 0.5)",
+                  transition: { duration: 0.2 },
+                }}
                 aria-label="Next testimonial"
+                data-ocid="testimonials.pagination_next"
               >
                 <ChevronRight className="w-4 h-4" />
-              </button>
+              </motion.button>
             </div>
           </div>
         </section>
@@ -284,7 +402,7 @@ export default function TestimonialsSection() {
           }`}
         >
           {testimonials.map((t, i) => (
-            <button
+            <motion.button
               key={t.name}
               type="button"
               onClick={() => {
@@ -301,7 +419,14 @@ export default function TestimonialsSection() {
                     : "oklch(0.15 0.01 280)",
                 border: `1px solid ${i === active ? "oklch(0.58 0.26 340 / 0.4)" : "oklch(0.22 0.02 280)"}`,
               }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 16px oklch(0.58 0.26 340 / 0.2)",
+                borderColor: "oklch(0.58 0.26 340 / 0.4)",
+                transition: { duration: 0.2 },
+              }}
               aria-label={`View testimonial from ${t.name}`}
+              data-ocid={`testimonials.item.${i + 1}`}
             >
               <img
                 src={t.avatar}
@@ -320,7 +445,7 @@ export default function TestimonialsSection() {
               >
                 {t.name}
               </p>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
